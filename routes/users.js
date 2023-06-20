@@ -1,6 +1,13 @@
 import { Router } from "express";
 import { check } from "express-validator";
-import { validateFields } from "../middlewares/validate-fileds.js";
+
+import {
+  validateFields,
+  validateJWT,
+  isAdminRole,
+  userHasRole,
+} from "../middlewares/index.js";
+
 import {
   emailExists,
   isRoleValid,
@@ -15,11 +22,11 @@ import {
   usuariosPut,
 } from "../controllers/users.js";
 
-export const router = Router();
+export const routerUser = Router();
 
-router.get("/", usuariosGet);
+routerUser.get("/", usuariosGet);
 
-router.put(
+routerUser.put(
   "/:id",
   [
     check("id", "It is not a valid ID").isMongoId(),
@@ -30,7 +37,7 @@ router.put(
   usuariosPut
 );
 
-router.post(
+routerUser.post(
   "/",
   [
     check("name", "Name is required").not().isEmpty(),
@@ -45,9 +52,12 @@ router.post(
   usuariosPost
 );
 
-router.delete(
+routerUser.delete(
   "/:id",
   [
+    validateJWT,
+    // isAdminRole,
+    userHasRole("ADMIN_ROLE"),
     check("id", "It is not a valid ID").isMongoId(),
     check("id").custom(userExistsById),
     validateFields,
@@ -55,4 +65,4 @@ router.delete(
   usuariosDelete
 );
 
-router.patch("/", usuariosPatch);
+routerUser.patch("/", usuariosPatch);
