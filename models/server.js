@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { router } from "../routes/users.js";
+import { dbConnection } from "../database/config.js";
 
 class Server {
   constructor() {
@@ -8,11 +9,18 @@ class Server {
     this.port = process.env.PORT;
     this.usuariosPath = "/api/users";
 
+    //Conectar a base de datos
+    this.conectarDB();
+
     //Middelwares
     this.middelwares();
 
     //Rutas
     this.routes();
+  }
+
+  async conectarDB() {
+    await dbConnection();
   }
 
   middelwares() {
