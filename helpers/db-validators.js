@@ -1,5 +1,5 @@
 import { Role } from "../models/role.js";
-import { User } from "../models/user.js";
+import { User, Category, Product } from "../models/index.js";
 
 const isRoleValid = async (role = "") => {
   const rolExists = await Role.findOne({ role });
@@ -18,8 +18,28 @@ const emailExists = async (mail = "") => {
 const userExistsById = async (id) => {
   const userDB = await User.findById(id);
   if (!userDB) {
-    throw new Error(`The id ${id} isn not found in the DB`);
+    throw new Error(`The id ${id} is not found in the DB`);
   }
 };
 
-export { isRoleValid, emailExists, userExistsById };
+const categoryExistsById = async (id) => {
+  const categoryDB = await Category.findById(id);
+  if (!categoryDB) {
+    throw new Error(`The id ${id} is not found in the DB`);
+  }
+};
+
+const productExistsById = async (id) => {
+  const productDB = await Product.findById(id);
+  if (!productDB) {
+    throw new Error(`The id ${id} is not found in the DB`);
+  }
+};
+
+export {
+  isRoleValid,
+  emailExists,
+  userExistsById,
+  categoryExistsById,
+  productExistsById,
+};
